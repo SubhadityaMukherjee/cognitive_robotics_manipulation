@@ -1,0 +1,1 @@
+python3 -m tf2onnx.convert --checkpoint res50/res50_faster_rcnn_iter_240000.ckpt.meta --output model.onnx --inputs res50_faster_rcnn_iter_240000.pkl

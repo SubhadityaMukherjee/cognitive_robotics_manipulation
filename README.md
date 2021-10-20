@@ -3,7 +3,12 @@
 - https://github.com/DucTranVan/grasp-detection-pytorch.git
 - https://arxiv.org/pdf/1412.3128.pdf
 - https://github-wiki-see.page/m/AshokBhat/ml/wiki/AlexNet
-## 
+## Pointnet++
+- https://github.com/yanx27/Pointnet_Pointnet2_pytorch
+
+## Tenms
+- https://github.com/onnx/tensorflow-onnx
+- https://www.dropbox.com/s/ldapcpanzqdu7tc/models.zip?dl=0
 
 
 <!-- ## Coupling between Perception and Manipulation: Learning to Grasp Objects in Highly Cluttered Environments
