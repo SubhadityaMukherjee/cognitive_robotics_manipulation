@@ -1,4 +1,5 @@
 from grasp_generator import GraspGenerator
+import time
 from environment.utilities import Camera
 from environment.env import Environment
 from utils import YcbObjects, PackPileData, IsolatedObjData, summarize
@@ -10,6 +11,7 @@ import sys
 import cv2
 import math
 import matplotlib.pyplot as plt
+# import torchsnooper as ts
 import time
 
 
@@ -24,6 +26,12 @@ class GrasppingScenarios():
             self.IMG_SIZE = 224
             self.network_path = 'trained_models/GR_ConvNet/cornell-randsplit-rgbd-grconvnet3-drop1-ch32/epoch_19_iou_0.98'
             sys.path.append('trained_models/GR_ConvNet')
+        elif (network_model == "alex"):
+            ##### GR-ConvNet #####
+            self.IMG_SIZE = 256
+            self.network_path = 'trained_models/alexNet/weights.pt'
+            sys.path.append('trained_models/alexNet')
+
         else:
             # you need to add your network here!
             print("The selected network has not been implemented yet!")
@@ -262,6 +270,7 @@ class GrasppingScenarios():
                         rgb = cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB)
                         
                         grasps, save_name = generator.predict_grasp( rgb, depth, n_grasps=number_of_attempts, show_output=output)
+                        print(grasps)
                         if (grasps == []):
                                 self.dummy_simulation_steps(30)
                                 print ("could not find a grasp point!")    
@@ -361,7 +370,7 @@ def parse_args():
     parser.add_argument('--save-network-output', dest='output', type=bool, default=False,
                         help='Save network output (True/False)')
 
-    parser.add_argument('--device', type=str, default='cpu', help='device (cpu/gpu)')
+    parser.add_argument('--device', type=str, default='gpu', help='device (cpu/gpu)')
     parser.add_argument('--vis', type=bool, default=True, help='vis (True/False)')
     parser.add_argument('--report', type=bool, default=True, help='report (True/False)')
 
@@ -380,11 +389,12 @@ if __name__ == '__main__':
     report=args.report
     
     grasp = GrasppingScenarios(args.network)
-
+    t1 = time.time()
     if args.scenario == 'isolated':
         grasp.isolated_obj_scenario(runs, device, vis, output=output, debug=False)
     elif args.scenario == 'packed':
         grasp.packed_or_pile_scenario(runs, args.scenario, device, vis, output=output, debug=False)
     elif args.scenario == 'pile':
         grasp.packed_or_pile_scenario(runs, args.scenario, device, vis, output=output, debug=False)
+    print(f"Took {time.time()-t1} seconds")
 

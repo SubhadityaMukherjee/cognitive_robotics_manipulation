@@ -13,6 +13,109 @@ from network.utils.dataset_processing.grasp import detect_grasps
 from skimage.filters import gaussian
 import os
 import cv2
+import sys
+import torchsnooper as tsp
+import torch.nn as nn
+sys.path.append("/home/robotics26/Downloads/grasp-detection-pytorch/src/models")
+
+# try:
+#     from train_model import 
+
+
+# except:
+#     pass
+
+# class AlexNet_Conv(nn.Module):
+#     r""" An AlexNet model. Most easily loaded with the .from_name or .from_pretrained methods
+#     Args:
+#       global_params (namedtuple): A set of GlobalParams shared between blocks
+#     Examples:
+#         model = AlexNet.from_pretrained("alexnet")
+#     """
+
+#     def __init__(self, global_params=None):
+#         super(AlexNet_Conv, self).__init__()
+
+#         self.features = nn.Sequential(
+#             nn.Conv2d(3, 64, kernel_size=5, stride=2, padding=2),
+#             nn.ReLU(inplace=True),
+#             nn.MaxPool2d(kernel_size=3, stride=2),
+
+#             nn.Conv2d(64, 192, kernel_size=5, padding=2),
+#             nn.ReLU(inplace=True),
+#             nn.MaxPool2d(kernel_size=3, stride=2),
+
+#             nn.Conv2d(192, 384, kernel_size=2, padding=1),
+#             nn.ReLU(inplace=True),
+
+#             nn.Conv2d(384, 256, kernel_size=2, padding=1),
+#             nn.ReLU(inplace=True),
+
+#             nn.Conv2d(256, 256, kernel_size=2, padding=1),
+#             nn.ReLU(inplace=True),
+#             nn.MaxPool2d(kernel_size=3, stride=2)
+#         )
+#         self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
+#         self.classifier = nn.Sequential(
+#             nn.Dropout(global_params.dropout_rate),
+#             nn.Linear(256 * 6 * 6, 4096),
+#             nn.ReLU(inplace=True),
+#             nn.Dropout(global_params.dropout_rate),
+#             nn.Linear(4096, 4096),
+#             nn.ReLU(inplace=True),
+#             nn.Linear(4096, global_params.num_classes),
+#         )
+
+#         for m in self.modules():
+#             if isinstance(m, nn.Conv2d):
+#                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+#                 if m.bias is not None:
+#                     nn.init.constant_(m.bias, 0)
+#             elif isinstance(m, nn.BatchNorm2d):
+#                 nn.init.constant_(m.weight, 1)
+#                 nn.init.constant_(m.bias, 0)
+#             elif isinstance(m, nn.Linear):
+#                 nn.init.normal_(m.weight, 0, 0.01)
+#                 nn.init.constant_(m.bias, 0)
+
+#     def extract_features(self, inputs):
+#         """ Returns output of the final convolution layer """
+#         x = self.features(inputs)
+#         return x
+
+#     def forward(self, inputs):
+#         # See note [TorchScript super()]
+#         x = self.features(inputs)
+#         x = self.avgpool(x)
+#         x = torch.flatten(x, 1)
+#         x = self.classifier(x)
+#         return x
+
+#     @classmethod
+#     def from_name(cls, model_name, override_params=None):
+#         cls._check_model_name_is_valid(model_name)
+#         global_params = get_model_params(model_name, override_params)
+#         return cls(global_params)
+
+#     @classmethod
+#     def from_pretrained(cls, model_name, num_classes=1000):
+#         model = cls.from_name(model_name, override_params={"num_classes": num_classes})
+#         load_pretrained_weights(model, model_name, load_fc=(num_classes == 1000))
+#         return model
+
+#     @classmethod
+#     def get_image_size(cls, model_name):
+#         cls._check_model_name_is_valid(model_name)
+#         _, res = alexnet_params(model_name)
+#         return res
+
+#     @classmethod
+#     def _check_model_name_is_valid(cls, model_name):
+#         """ Validates model name. None that pretrained weights are only available for
+#         the first four models (alexnet) at the moment. """
+#         valid_model = "alexnet"
+#         if model_name not in valid_model:
+#             raise ValueError("model_name should be one of: " + ", ".join(valid_model))
 
 class GraspGenerator:
     IMG_WIDTH = 224
@@ -30,9 +133,21 @@ class GraspGenerator:
         else:
             #self.net = torch.load(net_path, map_location=lambda storage, loc: storage.cuda(1))
             #self.device = get_device()
-            print ("GPU is not supported yet! :( -- continuing experiment on CPU!" )
-            self.net = torch.load(net_path, map_location='cpu')
-            self.device = get_device(force_cpu=True)
+            # self.net = torch.load(net_path, map_location='cpu')
+            # self.device = get_device(force_cpu=True)
+            if network == "GR_ConvNet":
+                self.net = torch.load(net_path).cuda()
+            # elif network == "alex":
+            #     self.net = AlexNet_Conv(21).cuda()
+            #     print(self.net.state_dict().keys())
+            #     # self.net.state_dict().keys = ['conv0.weight', 'conv0.bias', 'conv3.weight', 'conv3.bias', 'conv6.weight', 'conv6.bias', 'conv8.weight', 'conv8.bias', 'conv10.weight', 'conv10.bias', 'fc1.weight', 'fc1.bias', 'fc4.weight', 'fc4.bias', 'fc6.weight', 'fc6.bias']
+            #     # self.net = torch.load(net_path)
+            #     self.checkpoint = torch.load(net_path)
+            #     print(self.checkpoint.keys())
+            #     self.net.load_state_dict(self.checkpoint)
+                # print(self.net)
+            self.device = get_device(force_cpu=False)
+
 
         # print (self.net)
 
@@ -128,13 +243,14 @@ class GraspGenerator:
 
         return q_img, ang_img, width_img
 
+    # @tsp.snoop()
     def predict(self, rgb, depth, n_grasps=1, show_output=False):
 
         max_val = np.max(depth)
         depth = depth * (255 / max_val)
         depth = np.clip((depth - depth.mean())/175, -1, 1)
         
-        if (self.network == 'GR_ConvNet'):
+        if (self.network in ['GR_ConvNet', 'alex']):
             ##### GR-ConvNet #####
             depth = np.expand_dims(np.array(depth), axis=2)
             img_data = CameraData(width=self.IMG_WIDTH, height=self.IMG_WIDTH)
@@ -146,7 +262,8 @@ class GraspGenerator:
         with torch.no_grad():
             xc = x.to(self.device)
 
-            if (self.network == 'GR_ConvNet'):
+
+            if (self.network in ['GR_ConvNet', 'alex']):
                 ##### GR-ConvNet #####
                 pred = self.net.predict(xc)
                 # print (pred)

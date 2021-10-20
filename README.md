@@ -1,4 +1,12 @@
-## Coupling between Perception and Manipulation: Learning to Grasp Objects in Highly Cluttered Environments
+# README
+## Alex
+- https://github.com/DucTranVan/grasp-detection-pytorch.git
+- https://arxiv.org/pdf/1412.3128.pdf
+- https://github-wiki-see.page/m/AshokBhat/ml/wiki/AlexNet
+## 
+
+
+<!-- ## Coupling between Perception and Manipulation: Learning to Grasp Objects in Highly Cluttered Environments
 
 ###### [Hamidreza Kasaei](https://hkasaei.github.io/) | [cognitive robotics course](https://rugcognitiverobotics.github.io/) | [assignment description](https://github.com/SeyedHamidreza/cognitive_robotics_manipulation/blob/main/assignment_description.pdf) | [IRL-Lab](https://www.ai.rug.nl/irl-lab)
 ##
@@ -129,4 +137,4 @@ You need to add your trained model into the "trained_models" folder. You can che
 ## TODO
 
 - Add a param to save/not save the results
-- Objects get disappear after several runs, check the potential reasons. 
+- Objects get disappear after several runs, check the potential reasons.  -->
