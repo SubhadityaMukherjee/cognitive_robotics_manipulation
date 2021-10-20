@@ -110,7 +110,7 @@ You need to add your trained model into the "trained_models" folder. You can che
   - GGCNN:  https://github.com/dougsm/ggcnn
   - C_GR_ConvNet: https://github.com/krishkribo/3D_GDM-RSON
   - VGN: https://github.com/ethz-asl/vgn
-  - GDP: https://github.com/ethz-asl/vgn
+  - GDP [implemented as a baseline in VGN repo]: https://github.com/ethz-asl/vgn
    
 
 - Papers:
@@ -129,3 +129,4 @@ You need to add your trained model into the "trained_models" folder. You can che
 ## TODO
 
 - Add a param to save/not save the results
+- Objects get disappear after several runs, check the potential reasons. 
