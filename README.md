@@ -1,29 +1,14 @@
 # README
 
+## Check for results
+- results/
+- refs.bib
+
 # What we have used
+- GGCNN
 
-## GGCNN
-- @inproceedings{morrison2018closing,
-	title={{Closing the Loop for Robotic Grasping: A Real-time, Generative Grasp Synthesis Approach}},
-	author={Morrison, Douglas and Corke, Peter and Leitner, J\"urgen},
-	booktitle={Proc.\ of Robotics: Science and Systems (RSS)},
-	year={2018}
-}
-
-- Pretrained model : https://github.com/dougsm/ggcnn
-
-## GRConvNet
-- This one will be given by default
-- @inproceedings{kumra2020antipodal,
-  title={Antipodal robotic grasping using generative residual convolutional neural network},
-  author={Kumra, Sulabh and Joshi, Shirin and Sahin, Ferat},
-  booktitle={2020 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
-  pages={9626--9633},
-  year={2020},
-  organization={IEEE}
-}
-
-
+## Extra libraries
+- [einops](https://github.com/arogozhnikov/einops)
 
 ## Extras
 ### Alex
