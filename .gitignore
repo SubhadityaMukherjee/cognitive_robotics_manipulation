@@ -9,3 +9,4 @@ ggcnn_net
 *.pt
 *.pth
 *.pyc
+model.pth
