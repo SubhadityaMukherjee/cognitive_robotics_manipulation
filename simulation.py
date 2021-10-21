@@ -26,11 +26,11 @@ class GrasppingScenarios():
             self.IMG_SIZE = 224
             self.network_path = 'trained_models/GR_ConvNet/cornell-randsplit-rgbd-grconvnet3-drop1-ch32/epoch_19_iou_0.98'
             sys.path.append('trained_models/GR_ConvNet')
-        elif (network_model == "alex"):
-            ##### GR-ConvNet #####
-            self.IMG_SIZE = 256
-            self.network_path = 'trained_models/alexNet/weights.pt'
-            sys.path.append('trained_models/alexNet')
+        elif (network_model == "gg"):
+            ##### GGCNN #####
+            self.IMG_SIZE = 224
+            self.network_path = 'trained_models/ggcnn/ggcnn_net/ggcnn_weights_cornell/ggcnn_epoch_23_cornell'
+            sys.path.append("trained_models/ggcnn/ggcnn_net/")
 
         else:
             # you need to add your network here!

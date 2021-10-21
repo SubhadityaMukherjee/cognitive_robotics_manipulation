@@ -4,3 +4,8 @@ objects
 objects/*
 network_output
 network_output/*
+ggcnn_net/*
+ggcnn_net
+*.pt
+*.pth
+*.pyc
